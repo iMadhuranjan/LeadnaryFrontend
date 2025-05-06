@@ -102,8 +102,7 @@ const Navbar = () => {
 
   const auth = useSelector((state) => state.auth.isAuthenticated);
 
-  console.log("Auth state:", auth);
-
+ 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur dark:bg-zinc-950/70 border-b border-zinc-200 dark:border-zinc-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

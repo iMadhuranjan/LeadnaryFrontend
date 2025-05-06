@@ -31,8 +31,7 @@ const ForgotPasswordPage = () => {
     setLoading(true);
     dispatch(ForgetPassword({ email }))
       .then((result) => {
-        console.log(result);
-        if (result?.payload?.success) {
+         if (result?.payload?.success) {
           toast.success(result?.payload?.message || "OTP sent to your email");
           setStage("otp");
           // RESET cooldown every time OTP is resent

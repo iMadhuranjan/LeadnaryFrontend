@@ -230,11 +230,11 @@ const ProfilePage = () => {
                     alt="Profile"
                     className="h-full w-full rounded-full object-cover"
                   />
-                  {editing && (
+                  {/* {editing && (
                     <button className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700 dark:bg-violet-700 dark:hover:bg-violet-800">
                       <FiEdit className="h-4 w-4" />
                     </button>
-                  )}
+                  )} */}
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                   {profileData.username}
@@ -393,7 +393,6 @@ const ProfilePage = () => {
                       className="block w-full rounded-lg border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 sm:text-sm"
                       placeholder="Tell us about yourself..."
                     ></textarea>
-                     
                   </div>
                 ) : (
                   <div className="prose prose-sm max-w-none text-gray-700 dark:prose-invert dark:text-gray-300">

@@ -1,9 +1,9 @@
 import React from 'react'
 
-const layou = () => {
+const layou = ({children}) => {
   return (
     <div>
-      
+      {children}
     </div>
   )
 }

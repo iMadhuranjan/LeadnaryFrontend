@@ -89,9 +89,9 @@ export default function LandingPageCreator() {
         });
         const data = await res.json();
         if (data?.success) {
-          handleField(path, data.secure_url || data.url);
+           handleField(path, data.secure_url || data.url);
           setUploadStatus((s) => ({ ...s, [path]: "uploaded" }));
-        } else throw new Error(data?.message || "Upload failed");
+        } else throw new Error(data?.message || "File Too Large (Max 2 MB)");
       } catch (err) {
         console.error(err);
         setUploadStatus((s) => ({ ...s, [path]: "error" }));
@@ -389,7 +389,8 @@ export default function LandingPageCreator() {
                                 )}
                                 {uploadStatus[path] === "error" && (
                                   <span className="flex items-center gap-1 text-red-500">
-                                    <FiXCircle size={14} /> Upload failed
+                                    <FiXCircle size={14} /> File Too Large (Max
+                                    2 MB)
                                   </span>
                                 )}
                                 {value && uploadStatus[path] === "uploaded" && (

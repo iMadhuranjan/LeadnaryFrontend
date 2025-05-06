@@ -46,12 +46,15 @@ const LoginPage = () => {
     }
   }, []);
 
-  const auth = useSelector((state) => state.auth.isAuthenticated);
+  const auth = useSelector((state) => state.auth);
 
-  console.log("Auth state:", auth);   
-  if (auth) {
-    router.push("/dashboard");
-  }
+  useEffect(() => {
+    if (auth?.isAuthenticated && auth?.user?.isEmailVerified) {
+      router.push("/dashboard");
+    } else if (auth?.isAuthenticated && !auth?.user?.isEmailVerified) {
+      setNeedsVerification(true);
+    }
+  }, [auth, router]);
 
   function resendotpfn() {
     dispatch(resendOtp({ email: formData.email }))
@@ -134,7 +137,6 @@ const LoginPage = () => {
 
     dispatch(loginUser({ email: formData.email, password: formData.password }))
       .then((result) => {
-        console.log(result);
         if (result.payload.success) {
           toast.success(result.payload.message || "Login successful!");
           dispatch(authUser()).then(() => {
@@ -152,7 +154,6 @@ const LoginPage = () => {
       })
       .catch((err) => {
         setIsLoading(false);
-        console.log(err);
         toast.error(result.payload.message || "Login failed!");
       });
     try {
@@ -527,65 +528,125 @@ const LoginPage = () => {
   };
   return (
     <div className="flex flex-col md:min-h-screen bg-white md:flex-row dark:bg-gray-900">
-      {/* Left Column - Visual */}
-      <div className="relative hidden md:block md:w-1/2">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-900/90 to-indigo-900/90">
-          <div className="absolute inset-0 bg-[url('/pattern.svg')] bg-[length:300px_300px] opacity-10 mix-blend-overlay"></div>
+      {/* Left Column – Visual (Ultimate Login Sidebar) */}
+      <div className="relative hidden md:block md:w-1/2 overflow-hidden">
+        {/* Dynamic Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 animate-gradient-shift">
+          <div className="absolute inset-0 bg-[url('/pattern.svg')] bg-[length:300px_300px] opacity-10 mix-blend-overlay" />
         </div>
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-12 text-center text-white">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="max-w-lg"
-          >
-            <h3 className="mb-4 text-3xl font-bold">Welcome to Our Platform</h3>
-            <p className="mb-8 text-lg text-gray-200">
-              Access powerful tools and resources to grow your business and
-              streamline your workflow.
-            </p>
+        {/* Floating Tech Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/4 left-1/4 h-2 w-2 rounded-full bg-cyan-400 blur-sm animate-pulse" />
+          <div className="absolute top-1/3 right-1/3 h-3 w-3 rounded-full bg-purple-400 blur-sm animate-pulse delay-1000" />
+          <div className="absolute bottom-1/4 left-1/2 h-1.5 w-1.5 rounded-full bg-white blur-sm animate-pulse delay-1500" />
+        </div>
 
-            <div className="flex justify-center">
-              <div className="flex -space-x-3">
-                {[1, 2, 3, 4, 5].map((item) => (
-                  <motion.img
-                    key={item}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.3 + item * 0.1 }}
-                    className="h-12 w-12 rounded-full border-2 border-white/30 object-cover shadow-lg"
-                    src={`https://randomuser.me/api/portraits/${
-                      item % 2 === 0 ? "women" : "men"
-                    }/${item * 10}.jpg`}
-                    alt="User"
-                  />
-                ))}
-              </div>
+        {/* Main Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-10 text-white">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-md w-full"
+          >
+            {/* Logo/Branding */}
+            <div className="mb-8 flex justify-center items-center gap-2">
+              <svg
+                className="h-8 w-8 text-cyan-400"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <path
+                  d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <path d="M9 9H9.01" stroke="currentColor" strokeWidth="2" />
+                <path d="M15 9H15.01" stroke="currentColor" strokeWidth="2" />
+              </svg>
+              <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">
+                Leadnary
+              </span>
             </div>
 
+            {/* Headline */}
+            <h2 className="mb-6 text-4xl font-extrabold leading-tight">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
+                Launch. Convert.
+              </span>
+              <br />
+              <span className="text-cyan-300">Grow Faster.</span>
+            </h2>
+
+            {/* Subhead */}
+            <p className="mb-8 text-lg text-blue-100">
+              Your all-in-one platform for high-converting websites and lead
+              capture.
+              <br />
+              Sign in to continue building your pipeline.
+            </p>
+
+            {/* Feature Grid */}
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              {[
+                { icon: "🚀", title: "60-Second Launch" },
+                { icon: "📈", title: "Real-Time Analytics" },
+                { icon: "🛡️", title: "Enterprise Security" },
+                { icon: "📱", title: "Mobile Optimized" },
+              ].map((feature, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 + index * 0.1 }}
+                  className="rounded-lg bg-white/5 p-4 border border-white/10 backdrop-blur-sm hover:border-cyan-400/30 transition-colors"
+                >
+                  <div className="text-2xl mb-2">{feature.icon}</div>
+                  <div className="text-sm font-medium">{feature.title}</div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Live Stats Counter */}
             <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="mt-6 rounded-xl bg-white/10 p-4 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="inline-flex items-center bg-white/5 px-4 py-2 rounded-full border border-white/10"
             >
-              <div className="flex items-center justify-center gap-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <svg
-                    key={star}
-                    className="h-5 w-5 text-yellow-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-                <span className="font-medium">Rated 4.9/5 by our users</span>
-              </div>
+              <div className="w-2 h-2 rounded-full bg-green-400 mr-2 animate-pulse" />
+              <span className="text-sm">
+                <span className="font-semibold">1,248</span> sites launched this
+                week
+              </span>
             </motion.div>
           </motion.div>
         </div>
+
+        {/* Animation Styles */}
+        <style jsx global>{`
+          @keyframes gradient-shift {
+            0% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+            100% {
+              background-position: 0% 50%;
+            }
+          }
+          .animate-gradient-shift {
+            background-size: 200% 200%;
+            animation: gradient-shift 12s ease infinite;
+          }
+        `}</style>
       </div>
 
       {/* Right Column - Form */}

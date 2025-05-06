@@ -17,6 +17,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser, resendOtp, VerifyOtp } from "@/app/store/authSlice";
 import { useToast } from "@/components/ToastProvider";
 import { useRouter } from "next/navigation";
+import Toast from "@/components/Toast";
+import AuthShowcase from "./RegisterShow";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -60,7 +62,6 @@ const RegisterPage = () => {
 
   const auth = useSelector((state) => state.auth.isAuthenticated);
 
-  console.log("Auth state:", auth);
   if (auth) {
     router.push("/dashboard");
   }
@@ -813,68 +814,8 @@ const RegisterPage = () => {
         </motion.div>
       </div>
 
-      {/* Right Column - Visual */}
-      <div className="relative hidden md:block md:w-1/2">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-900/90 to-indigo-900/90">
-          <div className="absolute inset-0 bg-[url('/pattern.svg')] bg-[length:300px_300px] opacity-10 mix-blend-overlay"></div>
-        </div>
-
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-12 text-center text-white">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="max-w-lg"
-          >
-            <h3 className="mb-4 text-3xl font-bold">
-              Join Our Growing Community
-            </h3>
-            <p className="mb-8 text-lg text-gray-200">
-              Over 25,000 businesses trust our platform to grow their online
-              presence. Be part of something great.
-            </p>
-
-            <div className="flex justify-center">
-              <div className="flex -space-x-3">
-                {[1, 2, 3, 4, 5].map((item) => (
-                  <motion.img
-                    key={item}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.3 + item * 0.1 }}
-                    className="h-12 w-12 rounded-full border-2 border-white/30 object-cover shadow-lg"
-                    src={`https://randomuser.me/api/portraits/${
-                      item % 2 === 0 ? "women" : "men"
-                    }/${item * 10}.jpg`}
-                    alt="User"
-                  />
-                ))}
-              </div>
-            </div>
-
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="mt-6 rounded-xl bg-white/10 p-4 backdrop-blur-sm"
-            >
-              <div className="flex items-center justify-center gap-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <svg
-                    key={star}
-                    className="h-5 w-5 text-yellow-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-                <span className="font-medium">4.9/5 from 2,500+ reviews</span>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </div>
+      {/* ✨  Leadnary – Signup Showcase  */}
+     <AuthShowcase/>
 
       {toast.message && (
         <Toast

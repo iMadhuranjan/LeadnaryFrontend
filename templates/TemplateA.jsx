@@ -304,8 +304,7 @@ const Contact = ({ d = {} }) => {
 
     const path = window.location.pathname.split("/site/")[1];
     const subdomain = path || "unknown"; // fallback
-    console.log("Subdomain:", subdomain);
-    const websiteUrl = window.location.href;
+     const websiteUrl = window.location.href;
 
     await disptach(
       createLead({

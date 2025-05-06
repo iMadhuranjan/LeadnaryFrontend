@@ -88,7 +88,7 @@ export default function PageList() {
           page.
         </p>
         <Link
-          href="/create-page"
+          href="/dashboard/create"
           className="mt-4 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg flex items-center space-x-2 transition-all shadow-lg hover:shadow-xl"
         >
           <FiPlus />

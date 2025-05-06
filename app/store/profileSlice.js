@@ -115,8 +115,7 @@ const profileSlice = createSlice({
             .addCase(getProfile.fulfilled, (state, action) => {
                 state.loading = false;
                 state.profile = action.payload;
-                console.log("profileSlice", action.payload); // ✅ This should appear in console
-            })
+             })
             .addCase(getProfile.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;

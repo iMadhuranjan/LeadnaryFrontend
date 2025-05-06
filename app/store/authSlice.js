@@ -112,8 +112,7 @@ export const logoutUser = createAsyncThunk("/auth/logout", async () => {
         },
       }
     );
-    console.log(result);
-    return result?.data;
+     return result?.data;
   }
   catch (error) {
     return error?.response?.data;

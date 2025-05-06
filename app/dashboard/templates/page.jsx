@@ -32,3 +32,16 @@ const TemplatesPage = () => {
 };
 
 export default TemplatesPage;
+
+export const metadata = {
+  title: "Template Library - Leadnary",
+  description:
+    "Browse our collection of professionally designed templates for gyms, doctors, and more. Each template is responsive, SEO-optimized, and ready to launch.",
+  openGraph: {
+    title: "Template Library | Leadnary Dashboard",
+    description:
+      "Explore Leadnary’s free templates for various niches including gyms and doctors. Perfect for quick launches with built-in responsiveness and design.",
+    url: "https://leadnary.com/dashboard/templates",
+    type: "website",
+  },
+};

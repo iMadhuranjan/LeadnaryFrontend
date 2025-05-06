@@ -1,4 +1,3 @@
-// DashboardLayout.jsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -13,11 +12,10 @@ export default function DashboardLayout({ children }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const { isAuthenticated, loading, user } = useSelector((s) => s.auth);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const toggleSidebar = () => setSidebarOpen((open) => !open);
   const [initialCheck, setInitialCheck] = useState(true);
 
   useEffect(() => {
+    // Trigger auth check only if user is null
     if (!user) {
       dispatch(authUser()).finally(() => setInitialCheck(false));
     } else {
@@ -31,24 +29,21 @@ export default function DashboardLayout({ children }) {
     }
   }, [loading, isAuthenticated, initialCheck, router]);
 
+  // ✅ Block all rendering until auth is verified
+  if (loading || initialCheck || !isAuthenticated) {
+    return <SharingunLoader loadingText="Securing your session..." />;
+  }
+
+  // ✅ Only render layout if authenticated
   return (
     <div className="flex min-h-screen">
-      <DashboardSidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
-
-      {/* Main content area with proper spacing */}
+      <DashboardSidebar />
       <div className="flex flex-col flex-1 min-h-screen">
-        {/* Sticky Topbar with proper z-index */}
         <div className="sticky top-0 z-40">
-          <DashboardTopbar toggleSidebar={toggleSidebar} />
+          <DashboardTopbar toggleSidebar={() => {}} />
         </div>
-
-        {/* Main Content Area with proper margins */}
         <main className="flex-1 overflow-auto lg:ml-72">
-          {initialCheck || loading ? (
-            <SharingunLoader loadingText="Securing your session" />
-          ) : (
-            <div className=" mx-auto w-full">{children}</div>
-          )}
+          <div className="mx-auto w-full">{children}</div>
         </main>
       </div>
     </div>
