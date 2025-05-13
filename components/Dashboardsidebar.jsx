@@ -16,7 +16,6 @@ import {
   FiLayout,
   FiCreditCard,
   FiHelpCircle,
-  FiX,
   FiChevronDown,
   FiChevronRight,
   FiSettings,
@@ -24,13 +23,110 @@ import {
   FiLayers,
 } from "react-icons/fi";
 
+/* ───────────── single source of truth ───────────── */
+export const navItems = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+    icon: FiHome,
+    description: "Overview of your stats",
+  },
+  {
+    label: "Websites",
+    icon: FiGlobe,
+    description: "Manage your websites",
+    items: [
+      {
+        label: "Select Domain",
+        href: "/dashboard/domain-select",
+        icon: FiGlobe,
+        description: "Choose a domain",
+      },
+      {
+        label: "Create Website",
+        href: "/dashboard/create",
+        icon: FiPlus,
+        description: "Build new website",
+      },
+      {
+        label: "Edit Website",
+        href: "/dashboard/edit",
+        icon: FiFile,
+        description: "Modify websites",
+      },
+      {
+        label: "My Websites",
+        href: "/dashboard/websites",
+        icon: FiGlobe,
+        description: "View all websites",
+      },
+    ],
+  },
+  {
+    label: "Analytics",
+    href: "/dashboard/analytics",
+    icon: FiActivity,
+    description: "Track views and traffic",
+  },
+  {
+    label: "Leads",
+    href: "/dashboard/leads",
+    icon: FiUsers,
+    description: "View submitted leads",
+  },
+  {
+    label: "Templates",
+    href: "/dashboard/templates",
+    icon: FiLayers,
+    description: "Pre‑designed templates",
+  },
+  {
+    label: "Account",
+    icon: FiUser,
+    description: "Profile and settings",
+    items: [
+      {
+        label: "Profile",
+        href: "/dashboard/profile",
+        icon: FiUser,
+        description: "Personal information",
+      },
+      {
+        label: "Change Password",
+        href: "/dashboard/change-password",
+        icon: FiLock,
+        description: "Set new password",
+      },
+    ],
+  },
+  {
+    label: "My Plan",
+    href: "/dashboard/upgrade",
+    icon: FiCreditCard,
+    description: "View and upgrade plan",
+  },
+  {
+    label: "Support",
+    href: "/dashboard/support",
+    icon: FiHelpCircle,
+    description: "Tickets and support",
+  },
+  {
+    label: "Custom Domain",
+    href: "/dashboard/domains",
+    icon: FiLayers,
+    description: "Add a custom domain",
+  },
+];
+
 const Sidebar = ({ open, toggleSidebar }) => {
   const pathname = usePathname();
+
+  /* default‑open logic for desktop accordion */
   const [openSections, setOpenSections] = useState({
     websites: false,
     account: false,
   });
-
   useEffect(() => {
     setOpenSections({
       websites:
@@ -39,122 +135,27 @@ const Sidebar = ({ open, toggleSidebar }) => {
         pathname.includes("/dashboard/edit"),
       account:
         pathname.includes("/dashboard/profile") ||
-        pathname.includes("/dashboard/settings"),
+        pathname.includes("/dashboard/settings") ||
+        pathname.includes("/dashboard/change-password"),
     });
   }, [pathname]);
 
-  const toggleSection = (section) => {
-    setOpenSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }));
-  };
-
-  const navItems = [
-    {
-      label: "Dashboard",
-      href: "/dashboard",
-      icon: FiHome,
-      description: "Overview of your stats",
-    },
-    {
-      label: "Websites",
-      icon: FiGlobe,
-      description: "Manage your websites",
-      items: [
-        {
-          label: "Select Domain",
-          href: "/dashboard/domain-select",
-          icon: FiGlobe,
-          description: "Choose a domain",
-        },
-        {
-          label: "Create Website",
-          href: "/dashboard/create",
-          icon: FiPlus,
-          description: "Build new website",
-        },
-        {
-          label: "Edit Website",
-          href: "/dashboard/edit",
-          icon: FiFile,
-          description: "Modify websites",
-        },
-        {
-          label: "My Websites",
-          href: "/dashboard/websites",
-          icon: FiGlobe,
-          description: "View all websites",
-        },
-      ],
-    },
-    {
-      label: "Analytics",
-      href: "/dashboard/analytics",
-      icon: FiActivity,
-      description: "Track views and traffic",
-    },
-    {
-      label: "Leads",
-      href: "/dashboard/leads",
-      icon: FiUsers,
-      description: "View submitted leads",
-    },
-    {
-      label: "Templates",
-      href: "/dashboard/templates",
-      icon: FiLayers,
-      description: "Pre-designed templates",
-    },
-    {
-      label: "Account",
-      icon: FiUser,
-      description: "Profile and settings",
-      items: [
-        {
-          label: "Profile",
-          href: "/dashboard/profile",
-          icon: FiUser,
-          description: "Personal information",
-        },
-        {
-          label: "Change Password",
-          href: "/dashboard/change-password",
-          icon: FiLock,
-          description: "Set new password",
-        },
-      ],
-    },
-    {
-      label: "My Plan",
-      href: "/dashboard/upgrade",
-      icon: FiCreditCard,
-      description: "View and upgrade plan",
-    },
-    {
-      label: "Support",
-      href: "/dashboard/support",
-      icon: FiHelpCircle,
-      description: "Tickets and support",
-    },
-    {
-      label: "Custom Domain",
-      href: "/dashboard/domains",
-      icon: FiLayers,
-      description: "Add a Custom Domain",
-    },
-  ];
+  const toggleSection = (key) =>
+    setOpenSections((p) => ({ ...p, [key]: !p[key] }));
 
   const isActive = (href) => pathname === href;
 
   const renderNavItem = (item) => {
+    /* accordion section */
     if (item.items) {
+      const key = item.label.toLowerCase();
+      const expanded = openSections[key];
       return (
         <div key={item.label} className="mb-1">
           <button
-            onClick={() => toggleSection(item.label.toLowerCase())}
+            onClick={() => toggleSection(key)}
             className={`flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors ${
-              openSections[item.label.toLowerCase()]
+              expanded
                 ? "bg-gray-100/80 dark:bg-gray-700/80"
                 : "hover:bg-gray-100/50 dark:hover:bg-gray-700/50"
             }`}
@@ -170,7 +171,7 @@ const Sidebar = ({ open, toggleSidebar }) => {
                 </span>
               </div>
             </div>
-            {openSections[item.label.toLowerCase()] ? (
+            {expanded ? (
               <FiChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
             ) : (
               <FiChevronRight className="w-4 h-4 text-gray-500 dark:text-gray-400" />
@@ -178,7 +179,7 @@ const Sidebar = ({ open, toggleSidebar }) => {
           </button>
 
           <AnimatePresence>
-            {openSections[item.label.toLowerCase()] && (
+            {expanded && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
@@ -187,28 +188,28 @@ const Sidebar = ({ open, toggleSidebar }) => {
                 className="overflow-hidden"
               >
                 <div className="ml-2 mt-1 space-y-1 pl-10">
-                  {item.items.map((subItem) => (
+                  {item.items.map((sub) => (
                     <Link
-                      key={subItem.label}
-                      href={subItem.href}
-                      onClick={toggleSidebar}
+                      key={sub.href}
+                      href={sub.href}
+                      onClick={toggleSidebar} // closes on mobile
                       className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm ${
-                        isActive(subItem.href)
+                        isActive(sub.href)
                           ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
                           : "hover:bg-gray-100/30 dark:hover:bg-gray-700/30"
                       }`}
                     >
-                      <subItem.icon
+                      <sub.icon
                         className={`w-4 h-4 ${
-                          isActive(subItem.href)
+                          isActive(sub.href)
                             ? "text-indigo-600 dark:text-indigo-400"
                             : "text-gray-500 dark:text-gray-400"
                         }`}
                       />
                       <div>
-                        <span>{subItem.label}</span>
+                        <span>{sub.label}</span>
                         <span className="block text-xs text-gray-500 dark:text-gray-400">
-                          {subItem.description}
+                          {sub.description}
                         </span>
                       </div>
                     </Link>
@@ -221,9 +222,10 @@ const Sidebar = ({ open, toggleSidebar }) => {
       );
     }
 
+    /* single link */
     return (
       <Link
-        key={item.label}
+        key={item.href}
         href={item.href}
         onClick={toggleSidebar}
         className={`flex items-center gap-3 px-4 py-3 rounded-lg mb-1 ${
@@ -247,7 +249,7 @@ const Sidebar = ({ open, toggleSidebar }) => {
 
   return (
     <>
-      {/* Mobile Overlay */}
+      {/* ───────────── Overlay (mobile) ───────────── */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -260,7 +262,7 @@ const Sidebar = ({ open, toggleSidebar }) => {
         )}
       </AnimatePresence>
 
-      {/* Mobile Sidebar */}
+      {/* ───────────── Sidebar (mobile) ───────────── */}
       <AnimatePresence>
         {open && (
           <motion.aside
@@ -291,17 +293,17 @@ const Sidebar = ({ open, toggleSidebar }) => {
         )}
       </AnimatePresence>
 
-      {/* Desktop Sidebar */}
+      {/* ─────────── Sidebar (desktop) ─────────── */}
       <motion.aside
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
-        className="hidden lg:flex lg:flex-col z-50 fixed inset-y-0 left-0 w-72 bg-white dark:bg-black/20 "
+        className="hidden lg:flex lg:flex-col z-50 fixed inset-y-0 left-0 w-72 bg-white dark:bg-black/20"
       >
         <div className="flex justify-start items-center px-3 ml-7 mt-3 pb-3">
           <Link
             href="/"
-            className="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-violet-600 to-indigo-600 drop-shadow-sm"
+            className="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-violet-600 to-indigo-600"
           >
             Leadnary
           </Link>
